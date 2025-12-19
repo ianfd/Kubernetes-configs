@@ -10,51 +10,15 @@ if ! command -v kubectl &> /dev/null; then
     exit 1
 fi
 
-# Generate htpasswd credentials
-echo "Step 1: Generate registry credentials"
-echo "Enter registry username:"
-read -r REGISTRY_USER
-echo "Enter registry password:"
-read -rs REGISTRY_PASS
-echo
-
-# Generate htpasswd using docker
-echo "Generating htpasswd..."
-HTPASSWD=$(docker run --rm httpd:2 htpasswd -Bbn "$REGISTRY_USER" "$REGISTRY_PASS")
-
-# Generate random secret for registry
-echo "Step 2: Generate registry HTTP secret"
-REGISTRY_SECRET=$(openssl rand -hex 32)
-
-# Create temporary directory for manifests
-TEMP_DIR=$(mktemp -d)
-echo "Using temporary directory: $TEMP_DIR"
-
-# Copy all YAML files to temp directory
-cp ../*.yaml "$TEMP_DIR/"
-
-# Update the auth secret with generated htpasswd
-cat > "$TEMP_DIR/registry-auth-secret.yaml" <<EOF
-apiVersion: v1
-kind: Secret
-metadata:
-  name: registry-auth
-  namespace: registry
-type: Opaque
-stringData:
-  htpasswd: |
-$(echo "$HTPASSWD" | sed 's/^/    /')
-EOF
-
 echo
 echo "Step 3: Applying Kubernetes manifests"
-kubectl apply -f "$TEMP_DIR/namespace.yaml"
-kubectl apply -f "$TEMP_DIR/pvc.yaml"
-kubectl apply -f "$TEMP_DIR/config.yaml"
-kubectl apply -f "$TEMP_DIR/auth-secret.yaml"
-kubectl apply -f "$TEMP_DIR/deployment.yaml"
-kubectl apply -f "$TEMP_DIR/service.yaml"
-kubectl apply -f "$TEMP_DIR/ingress.yaml"
+kubectl apply -f "../namespace.yaml"
+kubectl apply -f "../pvc.yaml"
+kubectl apply -f "../config.yaml"
+kubectl apply -f "../auth-secret.yaml"
+kubectl apply -f "../deployment.yaml"
+kubectl apply -f "../service.yaml"
+kubectl apply -f "../ingress.yaml"
 
 echo
 echo "Step 4: Waiting for registry pod to be ready..."
