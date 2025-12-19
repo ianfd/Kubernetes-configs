@@ -31,7 +31,7 @@ TEMP_DIR=$(mktemp -d)
 echo "Using temporary directory: $TEMP_DIR"
 
 # Copy all YAML files to temp directory
-cp *.yaml "$TEMP_DIR/"
+cp ../*.yaml "$TEMP_DIR/"
 
 # Update the auth secret with generated htpasswd
 cat > "$TEMP_DIR/registry-auth-secret.yaml" <<EOF
@@ -46,19 +46,15 @@ stringData:
 $(echo "$HTPASSWD" | sed 's/^/    /')
 EOF
 
-# Update deployment with generated secret
-sed -i "s/your-random-secret-here-change-me/$REGISTRY_SECRET/g" "$TEMP_DIR/registry-deployment.yaml"
-
 echo
 echo "Step 3: Applying Kubernetes manifests"
-kubectl apply -f "$TEMP_DIR/registry-namespace.yaml"
-kubectl apply -f "$TEMP_DIR/registry-pvc.yaml"
-kubectl apply -f "$TEMP_DIR/registry-config.yaml"
-kubectl apply -f "$TEMP_DIR/registry-auth-secret.yaml"
-kubectl apply -f "$TEMP_DIR/registry-deployment.yaml"
-kubectl apply -f "$TEMP_DIR/registry-service.yaml"
-kubectl apply -f "$TEMP_DIR/registry-middleware.yaml"
-kubectl apply -f "$TEMP_DIR/registry-ingress.yaml"
+kubectl apply -f "$TEMP_DIR/namespace.yaml"
+kubectl apply -f "$TEMP_DIR/pvc.yaml"
+kubectl apply -f "$TEMP_DIR/config.yaml"
+kubectl apply -f "$TEMP_DIR/auth-secret.yaml"
+kubectl apply -f "$TEMP_DIR/deployment.yaml"
+kubectl apply -f "$TEMP_DIR/service.yaml"
+kubectl apply -f "$TEMP_DIR/ingress.yaml"
 
 echo
 echo "Step 4: Waiting for registry pod to be ready..."
