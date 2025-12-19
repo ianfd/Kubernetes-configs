@@ -4,7 +4,7 @@ metadata:
   name: registry
   namespace: registry
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
     traefik.ingress.kubernetes.io/router.middlewares: registry-ratelimit@kubernetescrd
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
@@ -12,7 +12,6 @@ spec:
   tls:
     - hosts:
         - reg.crimelabs.dev
-      secretName: registry-tls
   rules:
     - host: reg.crimelabs.dev
       http:
