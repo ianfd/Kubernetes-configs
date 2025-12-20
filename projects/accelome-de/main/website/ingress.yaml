@@ -4,13 +4,13 @@ metadata:
   name: website-https
   namespace: accelome
 spec:
-  entrypoints:
+  entryPoints:
     - websecure
   routes:
     - match: Host(`accelome.de`)
       kind: Rule
       services:
-        - name: website
+        - name: sveltekit-app
           port: 80
   tls:
     certResolver: letsencrypt
@@ -27,7 +27,7 @@ spec:
     - match: Host(`accelome.de`)
       kind: Rule
       services:
-        - name: website
+        - name: sveltekit-app
           port: 80
       middlewares:
         - name: redirect-to-https
