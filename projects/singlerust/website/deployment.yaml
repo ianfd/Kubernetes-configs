@@ -18,6 +18,7 @@ spec:
       containers:
         - name: website
           image: reg.crimelabs.dev/singlerust-main-website:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
               name: http
