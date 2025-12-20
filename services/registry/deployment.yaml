@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: registry
   namespace: registry
-  labels:
-    app: registry
 spec:
   replicas: 1
   selector:
@@ -20,31 +18,25 @@ spec:
           image: registry:2
           ports:
             - containerPort: 5000
-              name: http
+              name: registry
+              protocol: TCP
           env:
-            - name: REGISTRY_HTTP_SECRET
-              value: "50ac12acfa1cded7eefe9330c69fd6f198a76d66598037b02ea95b8e6946598a"
+            - name: REGISTRY_AUTH
+              value: htpasswd
+            - name: REGISTRY_AUTH_HTPASSWD_REALM
+              value: Registry Realm
+            - name: REGISTRY_AUTH_HTPASSWD_PATH
+              value: /auth/htpasswd
+            - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+              value: /var/lib/registry
+            - name: REGISTRY_STORAGE_DELETE_ENABLED
+              value: "true"
           volumeMounts:
             - name: registry-data
               mountPath: /var/lib/registry
-            - name: registry-config
-              mountPath: /etc/docker/registry
-              readOnly: true
             - name: registry-auth
               mountPath: /auth
               readOnly: true
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 5000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 5000
-            initialDelaySeconds: 5
-            periodSeconds: 5
           resources:
             requests:
               memory: "256Mi"
@@ -56,9 +48,6 @@ spec:
         - name: registry-data
           persistentVolumeClaim:
             claimName: registry-data
-        - name: registry-config
-          configMap:
-            name: registry-config
         - name: registry-auth
           secret:
             secretName: registry-auth
