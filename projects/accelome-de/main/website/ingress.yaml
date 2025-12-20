@@ -1,0 +1,34 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: website-https
+  workspace: accelome
+spec:
+  entrypoints:
+    - websecure
+  routes:
+    - match: Host(`accelome.de`)
+      kind: Rule
+      services:
+        - name: website
+          port: 80
+  tls:
+    certResolver: letsencrypt
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: website-http
+  namespace: accelome
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`accelome.de`)
+      kind: Rule
+      services:
+        - name: website
+          port: 80
+      middlewares:
+        - name: redirect-to-https
+          namespace: default
