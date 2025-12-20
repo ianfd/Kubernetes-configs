@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: website
-  workspace: accelome
+  namespace: accelome
 spec:
   selector:
     app: website
