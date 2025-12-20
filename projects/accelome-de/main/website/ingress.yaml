@@ -10,7 +10,7 @@ spec:
     - match: Host(`accelome.de`)
       kind: Rule
       services:
-        - name: sveltekit-app
+        - name: website
           port: 80
   tls:
     certResolver: letsencrypt
@@ -27,7 +27,7 @@ spec:
     - match: Host(`accelome.de`)
       kind: Rule
       services:
-        - name: sveltekit-app
+        - name: website
           port: 80
       middlewares:
         - name: redirect-to-https
