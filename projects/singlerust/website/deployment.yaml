@@ -28,6 +28,9 @@ spec:
               value: "https://singlerust.com"
             - name: NODE_ENV
               value: "production"
+          envFrom:
+            - secretRef:
+                name: postgres-credentials
           resources:
             requests:
               memory: "128Mi"
