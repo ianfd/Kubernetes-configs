@@ -31,4 +31,3 @@ spec:
           port: 80
       middlewares:
         - name: redirect-to-https
-          namespace: default
