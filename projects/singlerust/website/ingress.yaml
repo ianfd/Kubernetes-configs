@@ -2,12 +2,12 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: website-https
-  namespace: accelome
+  namespace: singlerust
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`accelome.de`)
+    - match: Host(`singlerust.com`)
       kind: Rule
       services:
         - name: website
@@ -19,12 +19,12 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: website-http
-  namespace: accelome
+  namespace: singlerust
 spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`accelome.de`)
+    - match: Host(`singlerust.com`)
       kind: Rule
       services:
         - name: website
