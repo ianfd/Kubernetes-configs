@@ -26,7 +26,7 @@ spec:
             - name: PORT
               value: "3000"
             - name: ORIGIN
-              value: "https://mcpmed.com"
+              value: "https://mcpmed.org"
             - name: NODE_ENV
               value: "production"
           envFrom:
